@@ -441,6 +441,10 @@ $RECYCLE.BIN/
 !.vscode/launch.json
 !.vscode/extensions.json
 
+##Excluding DataBase
+*.db
+*.db-shm
+*.db-wal
 
 ##ANGULAR
 

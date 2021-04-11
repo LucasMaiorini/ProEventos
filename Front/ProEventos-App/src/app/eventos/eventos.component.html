@@ -1,3 +1,51 @@
-<div *ngFor="let evento of eventos">
-  {{evento.theme}}
+<h2>Eventos</h2>
+<hr>
+<div class="form-inline">
+  <div class="form-group mb-2">
+    <input type="text" class="form-control mr-2" [(ngModel)]="filtersListBy" placeholder="buscar">
+  </div>
 </div>
+<table class="table table-stripped">
+  <thead class="thead-dark">
+    <tr>
+      <th>#</th>
+      <th>
+        <button class="btn btn-outline-light btn-sm" (click)="showImage()"><span
+            *ngIf="showingImage; else ImageHideMessage">Exibir Imagem</span>
+          <ng-template #ImageHideMessage>
+            Ocular Imagem
+          </ng-template>
+        </button>
+      </th>
+      <th>Tema</th>
+      <th>Local</th>
+      <th>Data</th>
+      <th>Qtd Pessoas</th>
+      <th>Lote</th>
+      <th>Opções</th>
+    </tr>
+  </thead>
+  <tbody *ngIf="events && events.length">
+    <tr *ngFor="let evento of filteredEvents">
+      <td>{{evento.eventId}}</td>
+      <td><span [collapse]="showingImage" [isAnimated]="true"><img src="/assets/{{evento.imageURL}}"
+            [style.width.px]="80"></span></td>
+      <td>{{evento.theme}}</td>
+      <td>{{evento.location}}</td>
+      <td>{{evento.eventDate}}</td>
+      <td>{{evento.numberOfPeople}}</td>
+      <td>{{evento.batch}}</td>
+      <td>
+        <button type="button" class="btn btn-secondary btn-sm mr-2">Editar</button>
+        <button type="button" class="btn btn-danger btn-sm">Excluir</button>
+      </td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr *ngIf="!events.length">
+      <td colspan="8">
+        <h4 class="text-center">Não há eventos cadastrados :(</h4>
+      </td>
+    </tr>
+  </tfoot>
+</table>
