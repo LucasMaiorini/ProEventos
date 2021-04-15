@@ -1,0 +1,74 @@
+<app-title [title]="'Eventos'"></app-title>
+
+<div class="form-inline">
+  <div class="form-group mb-2">
+    <input type="text" class="form-control mr-2" [(ngModel)]="filtersListBy" placeholder="buscar">
+  </div>
+</div>
+
+<ngx-spinner bdColor="rgba(0,0,0,0)" size="medium" color="#000000" type="ball-newton-cradle" [fullScreen]="false">
+  <!-- <p style="color: rgb(0, 0, 0)"> Aguarde... </p> -->
+</ngx-spinner>
+
+<table class="table table-stripped">
+  <thead class="thead-dark">
+    <tr>
+      <th>#</th>
+      <th>
+        <button class="btn btn-outline-light btn-sm" (click)="showImage()">
+          <span *ngIf="showingImage; else ImageHideMessage" tooltip="Mostrar Imagem">
+            <i class="fa fa-eye"></i>
+          </span>
+          <ng-template #ImageHideMessage>
+            <i class="fa fa-slash" tooltip="Ocultar Imagem"></i>
+          </ng-template>
+        </button>
+      </th>
+      <th>Tema</th>
+      <th>Local</th>
+      <th>Data</th>
+      <th>Qtd Pessoas</th>
+      <th>Lote</th>
+      <th>Opções</th>
+    </tr>
+  </thead>
+  <tbody *ngIf="events && events.length">
+    <tr *ngFor="let event of filteredEvents">
+      <td>{{event.id}}</td>
+      <td>
+        <span [collapse]="showingImage" [isAnimated]="true">
+          <img src="/assets/{{event.imageURL}}" [style.width.px]="80">
+        </span>
+      </td>
+      <td>{{event.theme}}</td>
+      <td>{{event.location}}</td>
+      <td>{{event.eventDate | DateTimeFormat}}</td>
+      <td>{{event.numberOfPeople}}</td>
+      <td>{{event.batches[0].name}}</td>
+      <td>
+        <button type="button" class="btn btn-secondary btn-sm mr-2" tooltip="Editar" placement="left">
+          <i class="fa fa-edit"></i>
+        </button>
+        <button type="button" class="btn btn-danger btn-sm" (click)="openModal(template)" tooltip="Excluir"
+          placement="right">
+          <i class="fa fa-trash"></i>
+        </button>
+      </td>
+    </tr>
+  </tbody>
+  <tfoot>
+    <tr *ngIf="!events.length">
+      <td colspan="8">
+        <h4 class="text-center">Não há eventos cadastrados :(</h4>
+      </td>
+    </tr>
+  </tfoot>
+</table>
+
+<ng-template #template>
+  <div class="modal-body text-center">
+    <p>Deseja excluir o evento?</p>
+    <button type="button" class="btn btn-default" (click)="confirm()">Sim</button>
+    <button type="button" class="btn btn-primary" (click)="decline()">Não</button>
+  </div>
+</ng-template>
