@@ -4,6 +4,7 @@ import { EventService } from '../../services/event.service';
 import { BsModalRef, BsModalService } from 'ngx-bootstrap/modal';
 import { ToastrService } from 'ngx-toastr';
 import { NgxSpinnerService } from 'ngx-spinner';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-eventos',
@@ -24,14 +25,15 @@ export class EventosComponent implements OnInit {
 
   public set filtersListBy(value: string) {
     this.filter = value;
-    this.filteredEvents = this.filtersListBy ? this.eventsFiltered(this.filter) : this.events;
+    this.filteredEvents = this.filtersListBy ? this.eventsFilter(this.filtersListBy) : this.events;
   }
 
   constructor(
     private eventService: EventService,
     private modalService: BsModalService,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private router: Router,
   ) { }
 
   public ngOnInit(): void {
@@ -55,9 +57,9 @@ export class EventosComponent implements OnInit {
     });
   }
 
-  public eventsFiltered(filtersListBy: string): Event[] {
+  public eventsFilter(filtersListBy: string): Event[] {
     filtersListBy = filtersListBy.toLocaleLowerCase();
-    return this.filteredEvents.filter(
+    return this.events.filter(
       (event: any) => event.theme.toLocaleLowerCase().indexOf(filtersListBy) !== -1 ||
         event.location.toLocaleLowerCase().indexOf(filtersListBy) !== -1
     );
@@ -65,6 +67,10 @@ export class EventosComponent implements OnInit {
 
   public showImage(): void {
     this.showingImage = !this.showingImage;
+  }
+
+  detailEvent(id: number): void {
+    this.router.navigate([`detalhe/${id}`]);
   }
 
   // MODAL

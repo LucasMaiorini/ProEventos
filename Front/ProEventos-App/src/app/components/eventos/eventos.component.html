@@ -1,70 +1,82 @@
-<app-title [title]="'Eventos'"></app-title>
+<app-title [title]="'Eventos'" [icon]="'calendar-alt'"></app-title>
 
-<div class="form-inline">
-  <div class="form-group mb-2">
-    <input type="text" class="form-control mr-2" [(ngModel)]="filtersListBy" placeholder="buscar">
+
+<div class="card rounded p-3">
+  <div class="d-flex">
+    <div class="flex-fill pr-5">
+      <div class="input-group mb-2">
+        <div class="input-group-prepend">
+          <div class="input-group-text">
+            <i class="fa fa-search" style="color: #cecece;"></i>
+          </div>
+        </div>
+        <input type="text" class="form-control rounded-right" [(ngModel)]="filtersListBy" placeholder="buscar">
+      </div>
+    </div>
+    <div>
+      <button class="d-flex btn btn-outline-secondary" tooltip="Criar um novo evento" [routerLink]="['/detalhe']">
+        <i class="fa fa-plus-circle my-1"></i>
+        <b class="ml-1 d-none d-sm-block"> Novo </b>
+      </button>
+    </div>
   </div>
-</div>
 
-<ngx-spinner bdColor="rgba(0,0,0,0)" size="medium" color="#000000" type="ball-newton-cradle" [fullScreen]="false">
-  <!-- <p style="color: rgb(0, 0, 0)"> Aguarde... </p> -->
-</ngx-spinner>
+  <ngx-spinner bdColor="rgba(0,0,0,0)" size="medium" color="#000000" type="ball-newton-cradle" [fullScreen]="false">
+    <!-- <p style="color: rgb(0, 0, 0)"> Aguarde... </p> -->
+  </ngx-spinner>
 
-<table class="table table-stripped">
-  <thead class="thead-dark">
-    <tr>
-      <th>#</th>
-      <th>
-        <button class="btn btn-outline-light btn-sm" (click)="showImage()">
-          <span *ngIf="showingImage; else ImageHideMessage" tooltip="Mostrar Imagem">
-            <i class="fa fa-eye"></i>
+  <table class="table table-stripped">
+    <thead class="thead-dark">
+      <tr>
+        <th class="d-none d-md-table-cell">#</th>
+        <th class="d-none d-md-table-cell">
+          <button class="btn btn-outline-light btn-sm" (click)="showImage()">
+            <span *ngIf="showingImage; else ImageHideMessage" tooltip="Mostrar Imagem">
+              <i class="fa fa-eye"></i>
+            </span>
+            <ng-template #ImageHideMessage>
+              <i class="fa fa-slash" tooltip="Ocultar Imagem"></i>
+            </ng-template>
+          </button>
+        </th>
+        <th>Tema</th>
+        <th>Local</th>
+        <th>Data</th>
+        <th class="d-none d-sm-table-cell">Ocupação Máxima</th>
+        <th class="d-none d-sm-table-cell">Lote</th>
+        <th>Opções</th>
+      </tr>
+    </thead>
+    <tbody *ngIf="events && events.length">
+      <tr *ngFor="let event of filteredEvents" (click)="detailEvent(event.id)" class="tr-selected">
+        <td class="d-none d-md-table-cell">{{event.id}}</td>
+        <td class="d-none d-md-table-cell">
+          <span [collapse]="showingImage" [isAnimated]="true">
+            <img src="/assets/{{event.imageURL}}" [style.width.px]="80">
           </span>
-          <ng-template #ImageHideMessage>
-            <i class="fa fa-slash" tooltip="Ocultar Imagem"></i>
-          </ng-template>
-        </button>
-      </th>
-      <th>Tema</th>
-      <th>Local</th>
-      <th>Data</th>
-      <th>Qtd Pessoas</th>
-      <th>Lote</th>
-      <th>Opções</th>
-    </tr>
-  </thead>
-  <tbody *ngIf="events && events.length">
-    <tr *ngFor="let event of filteredEvents">
-      <td>{{event.id}}</td>
-      <td>
-        <span [collapse]="showingImage" [isAnimated]="true">
-          <img src="/assets/{{event.imageURL}}" [style.width.px]="80">
-        </span>
-      </td>
-      <td>{{event.theme}}</td>
-      <td>{{event.location}}</td>
-      <td>{{event.eventDate | DateTimeFormat}}</td>
-      <td>{{event.numberOfPeople}}</td>
-      <td>{{event.batches[0].name}}</td>
-      <td>
-        <button type="button" class="btn btn-secondary btn-sm mr-2" tooltip="Editar" placement="left">
-          <i class="fa fa-edit"></i>
-        </button>
-        <button type="button" class="btn btn-danger btn-sm" (click)="openModal(template)" tooltip="Excluir"
-          placement="right">
-          <i class="fa fa-trash"></i>
-        </button>
-      </td>
-    </tr>
-  </tbody>
-  <tfoot>
-    <tr *ngIf="!events.length">
-      <td colspan="8">
-        <h4 class="text-center">Não há eventos cadastrados :(</h4>
-      </td>
-    </tr>
-  </tfoot>
-</table>
-
+        </td>
+        <td>{{event.theme}}</td>
+        <td>{{event.location}}</td>
+        <td>{{event.eventDate | DateTimeFormat}}</td>
+        <td class="d-none d-sm-table-cell">{{event.numberOfPeople}}</td>
+        <td class="d-none d-sm-table-cell">{{event.batches[0].name}}</td>
+        <td>
+          <button type="button" class="btn btn-danger btn-sm" (click)="openModal(template)" tooltip="Excluir"
+            placement="right">
+            <i class="fa fa-trash"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+    <tfoot>
+      <tr *ngIf="!events.length">
+        <td colspan="8">
+          <h4 class="text-center">Não há eventos cadastrados :(</h4>
+        </td>
+      </tr>
+    </tfoot>
+  </table>
+</div>
 <ng-template #template>
   <div class="modal-body text-center">
     <p>Deseja excluir o evento?</p>
@@ -72,3 +84,4 @@
     <button type="button" class="btn btn-primary" (click)="decline()">Não</button>
   </div>
 </ng-template>
+<router-outlet></router-outlet>
