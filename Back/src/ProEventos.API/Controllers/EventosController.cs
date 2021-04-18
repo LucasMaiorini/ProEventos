@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using ProEventos.Application.Dtos;
 using ProEventos.Application.Interfaces;
 using ProEventos.Domain;
 
@@ -24,9 +25,9 @@ namespace ProEventos.API.Controllers
         {
             try
             {
-                Event[] events = await _eventService.GetAllEventsAsync(true);
+                EventDto[] events = await _eventService.GetAllEventsAsync(true);
                 //IActionResult allows to return the status code, such as Not Found (404)
-                if (events == null) return NotFound("Nenhum Evento encontrado.");
+                if (events == null) return NoContent();
                 //IActionResult allows to return the status code, such as Ok (200)
                 return Ok(events);
             }
@@ -38,13 +39,13 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Event>> GetById(int id)
+        public async Task<ActionResult<EventDto>> GetById(int id)
         {
             try
             {
-                Event eventToReturn = await _eventService.GetEventByIdAsync(id, true);
+                EventDto eventToReturn = await _eventService.GetEventByIdAsync(id, true);
                 //IActionResult allows to return the status code, such as Not Found (404)
-                if (eventToReturn == null) return NotFound("Nenhum Evento encontrado.");
+                if (eventToReturn == null) return NoContent();
                 //IActionResult allows to return the status code, such as Ok (200)
                 return Ok(eventToReturn);
             }
@@ -56,13 +57,13 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpGet("theme/{theme}")]
-        public async Task<ActionResult<Event[]>> GetByTheme(string theme)
+        public async Task<ActionResult<EventDto[]>> GetByTheme(string theme)
         {
             try
             {
-                Event[] events = await _eventService.GetAllEventsByThemeAsync(theme, true);
+                EventDto[] events = await _eventService.GetAllEventsByThemeAsync(theme, true);
                 //IActionResult allows to return the status code, such as Not Found (404)
-                if (events == null) return NotFound("Nenhum Evento encontrado.");
+                if (events == null) return NoContent();
                 //IActionResult allows to return the status code, such as Ok (200)
                 return Ok(events);
             }
@@ -74,13 +75,13 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Post(Event model)
+        public async Task<IActionResult> Post(EventDto model)
         {
             try
             {
-                Event eventToPost = await _eventService.AddEvents(model);
+                EventDto eventToPost = await _eventService.AddEvents(model);
                 //IActionResult allows to return the status code, such as BadRequest (400)
-                if (eventToPost == null) return BadRequest("Erro ao tentar adicionar o evento.");
+                if (eventToPost == null) return NoContent();
                 //IActionResult allows to return the status code, such as Ok (200)
                 return Ok(eventToPost);
             }
@@ -92,13 +93,13 @@ namespace ProEventos.API.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> Put(int id, Event model)
+        public async Task<IActionResult> Put(int id, EventDto model)
         {
             try
             {
-                Event eventToUpdate = await _eventService.UpdateEvent(id, model);
+                EventDto eventToUpdate = await _eventService.UpdateEvent(id, model);
                 //IActionResult allows to return the status code, such as BadRequest (400)
-                if (eventToUpdate == null) return BadRequest("Erro ao tentar adicionar o evento.");
+                if (eventToUpdate == null) return NoContent();
                 //IActionResult allows to return the status code, such as Ok (200)
                 return Ok(eventToUpdate);
             }

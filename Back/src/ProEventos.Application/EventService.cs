@@ -1,5 +1,7 @@
 using System;
 using System.Threading.Tasks;
+using AutoMapper;
+using ProEventos.Application.Dtos;
 using ProEventos.Application.Interfaces;
 using ProEventos.Domain;
 using ProEventos.Persistence.Interfaces;
@@ -10,20 +12,30 @@ namespace ProEventos.Application
     {
         private readonly IGeneralPersistence _generalPersistence;
         private readonly IEventPersistence _eventPersistence;
-        public EventService(IGeneralPersistence generalPersistence, IEventPersistence eventPersistence)
+        private readonly IMapper _mapper;
+
+        public EventService(
+            IGeneralPersistence generalPersistence,
+            IEventPersistence eventPersistence,
+            IMapper mapper
+            )
         {
             this._generalPersistence = generalPersistence;
             this._eventPersistence = eventPersistence;
+            this._mapper = mapper;
         }
-        public async Task<Event> AddEvents(Event model)
+        public async Task<EventDto> AddEvents(EventDto model)
         {
             try
             {
-                _generalPersistence.Add<Event>(model);
+                Event mappedEvent = _mapper.Map<Event>(model);
+                _generalPersistence.Add<Event>(mappedEvent);
                 if (await _generalPersistence.SaveChangesAsync())
                 {
-                    //The event is returned just in case the dev wants to use it for something in project.
-                    return await _eventPersistence.GetEventByIdAsync(model.Id);
+                    //The eventDto is returned just in case the dev wants to use it for something in project.
+                    Event unmappedEvent = await _eventPersistence.GetEventByIdAsync(mappedEvent.Id);
+                    EventDto mappedEventDto = _mapper.Map<EventDto>(unmappedEvent);
+                    return mappedEventDto;
                 }
                 return null;
             }
@@ -33,8 +45,7 @@ namespace ProEventos.Application
             }
         }
 
-
-        public async Task<Event> UpdateEvent(int id, Event model)
+        public async Task<EventDto> UpdateEvent(int id, EventDto eventDto)
         {
             try
             {
@@ -42,14 +53,15 @@ namespace ProEventos.Application
                 //This is the reason we need to add AsNoTracking
                 Event eventToUpdate = await _eventPersistence.GetEventByIdAsync(id);
                 if (eventToUpdate == null) return null;
-
-                model.Id = eventToUpdate.Id;
-
-                _generalPersistence.Update(model);
+                eventDto.Id = eventToUpdate.Id;
+                //The Map takes all eventDto fields values and pass it to eventToUpdate
+                _mapper.Map(eventDto, eventToUpdate);
+                _generalPersistence.Update<Event>(eventToUpdate);
                 if (await _generalPersistence.SaveChangesAsync())
                 {
+                    var eventToReturn = await _eventPersistence.GetEventByIdAsync(eventToUpdate.Id);
                     //The event is returned just in case the dev wants to use it for something in project.
-                    return await _eventPersistence.GetEventByIdAsync(model.Id);
+                    return _mapper.Map<EventDto>(eventToReturn);
                 }
                 return null;
             }
@@ -77,14 +89,14 @@ namespace ProEventos.Application
             }
         }
 
-        public async Task<Event> GetEventByIdAsync(int id, bool includeSpeechers = false)
+        public async Task<EventDto> GetEventByIdAsync(int id, bool includeSpeechers = false)
         {
             try
             {
-                Event eventToReturn = await _eventPersistence.GetEventByIdAsync(id);
-                if (eventToReturn == null) return null;
-
-                return eventToReturn;
+                Event unmappedEvent = await _eventPersistence.GetEventByIdAsync(id);
+                if (unmappedEvent == null) return null;
+                EventDto mappedEvent = _mapper.Map<EventDto>(unmappedEvent);
+                return mappedEvent;
             }
             catch (Exception ex)
             {
@@ -92,14 +104,14 @@ namespace ProEventos.Application
             }
         }
 
-        public async Task<Event[]> GetAllEventsAsync(bool includeSpeechers = false)
+        public async Task<EventDto[]> GetAllEventsAsync(bool includeSpeechers = false)
         {
             try
             {
-                Event[] events = await _eventPersistence.GetAllEventsAsync();
-                if (events == null) return null;
-
-                return events;
+                Event[] unmappedEvents = await _eventPersistence.GetAllEventsAsync();
+                if (unmappedEvents == null) return null;
+                EventDto[] mappedEvents = _mapper.Map<EventDto[]>(unmappedEvents);
+                return mappedEvents;
             }
             catch (Exception ex)
             {
@@ -107,14 +119,15 @@ namespace ProEventos.Application
             }
         }
 
-        public async Task<Event[]> GetAllEventsByThemeAsync(string theme, bool includeSpeechers = false)
+        public async Task<EventDto[]> GetAllEventsByThemeAsync(string theme, bool includeSpeechers = false)
         {
             try
             {
-                Event[] events = await _eventPersistence.GetAllEventsByThemeAsync(theme);
-                if (events == null) return null;
+                Event[] unmappedEvents = await _eventPersistence.GetAllEventsByThemeAsync(theme);
+                if (unmappedEvents == null) return null;
 
-                return events;
+                EventDto[] mappedEvents = _mapper.Map<EventDto[]>(unmappedEvents);
+                return mappedEvents;
             }
             catch (Exception ex)
             {
