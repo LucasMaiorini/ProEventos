@@ -59,9 +59,9 @@
         <td>{{event.location}}</td>
         <td>{{event.eventDate | DateTimeFormat}}</td>
         <td class="d-none d-sm-table-cell">{{event.numberOfPeople}}</td>
-        <td class="d-none d-sm-table-cell">{{event.batches[0].name}}</td>
+        <td class="d-none d-sm-table-cell">{{event.batches[0]?.name}}</td>
         <td>
-          <button type="button" class="btn btn-danger btn-sm" (click)="openModal(template)" tooltip="Excluir"
+          <button type="button" class="btn btn-danger btn-sm" (click)="openModal($event, template, event.id, event.theme)" tooltip="Excluir"
             placement="right">
             <i class="fa fa-trash"></i>
           </button>
@@ -79,7 +79,7 @@
 </div>
 <ng-template #template>
   <div class="modal-body text-center">
-    <p>Deseja excluir o evento?</p>
+    <p>Deseja excluir o evento: {{eventTheme}} [id: {{eventId}}]?</p>
     <button type="button" class="btn btn-default" (click)="confirm()">Sim</button>
     <button type="button" class="btn btn-primary" (click)="decline()">Não</button>
   </div>

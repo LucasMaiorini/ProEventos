@@ -17,20 +17,20 @@
       <div class="form-row">
         <div class="form-group col-sm-6">
           <label>Primeiro Nome</label>
-          <input [ngClass]="{'is-invalid': form.get('firstName')?.errors && form.get('firstName')?.touched}"
+          <input [ngClass]="cssValidator('firstName')"
             formControlName="firstName" type="text" class="form-control" placeholder="Insira o Primeiro nome" />
           <div class="invalid-feedback">Primeiro nome é obrigatório</div>
         </div>
         <div class="form-group col-sm-6">
           <label>Último nome</label>
-          <input [ngClass]="{'is-invalid': form.get('lastName')?.errors && form.get('lastName')?.touched}"
+          <input [ngClass]="cssValidator('lastName')"
             formControlName="lastName" type="text" class="form-control" placeholder="Insira o Último nome" />
           <div class="invalid-feedback">Último nome é obrigatório</div>
         </div>
       </div>
       <div class="form-group">
         <label for="">Email:</label>
-        <input [ngClass]="{'is-invalid': form.get('email')?.errors && form.get('email')?.touched}"
+        <input [ngClass]="cssValidator('email')"
           formControlName="email" class="form-control" type="text" placeholder="Insira o Nome Completo" />
         <div class="invalid-feedback" *ngIf="form.get('email')?.hasError('required')">E-mail é obrigatório</div>
         <div class="invalid-feedback" *ngIf="form.get('email')?.hasError('email')">Insira um endereço de e-mail válido
@@ -38,14 +38,14 @@
       </div>
       <div class="form-group">
         <label for="">Usuario:</label>
-        <input [ngClass]="{'is-invalid': form.get('userName')?.errors && form.get('userName')?.touched}"
+        <input [ngClass]="cssValidator('userName')"
           formControlName="userName" class="form-control" type="text" placeholder="Insira o nome de Usuário" />
         <div class="invalid-feedback">Nome de usuário é obrigatório</div>
       </div>
       <div class="form-row">
         <div class="form-group col-sm-6">
           <label for="">Senha:</label>
-          <input [ngClass]="{'is-invalid': form.get('password')?.errors && form.get('password')?.touched}"
+          <input [ngClass]="cssValidator('password')"
             formControlName="password" class="form-control" type="password" placeholder="Digite uma Senha" />
           <div class="invalid-feedback" *ngIf="form.get('password')?.hasError('required')">Senha é obrigatória</div>
           <div class="invalid-feedback" *ngIf="form.get('password')?.hasError('minlength')">Tamanho mínimo: 4 caracteres
@@ -53,7 +53,7 @@
         </div>
         <div class="form-group col-sm-6">
           <label for="">Confirmar Senha:</label>
-          <input [ngClass]="{'is-invalid': form.get('confirmPassword')?.errors && form.get('confirmPassword')?.touched}"
+          <input [ngClass]="cssValidator('confirmPassword')"
             formControlName="confirmPassword" class="form-control" type="password" placeholder="Confirme a Senha" />
           <div class="invalid-feedback" *ngIf="form.get('confirmPassword')?.hasError('required')">Confirmar a Senha é
             obrigatório</div>

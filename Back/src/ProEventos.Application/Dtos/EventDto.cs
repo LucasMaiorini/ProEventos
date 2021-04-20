@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
@@ -9,7 +10,7 @@ namespace ProEventos.Application.Dtos
         [Required]
         public string Location { get; set; }
         [Required]
-        public string EventDate { get; set; }
+        public DateTime EventDate { get; set; }
         [Required, StringLength(50, MinimumLength = 3)]
         public string Theme { get; set; }
         [Range(1,120000)]

@@ -13,11 +13,13 @@ import { Router } from '@angular/router';
 })
 export class EventosComponent implements OnInit {
 
+  modalRef!: BsModalRef;
   public events: Event[] = [];
   public filteredEvents: Event[] = [];
-  public showingImage = true;
   private filter = '';
-  modalRef!: BsModalRef;
+  eventId = 0;
+  public showingImage = true;
+  eventTheme = '';
 
   public get filtersListBy(): string {
     return this.filter;
@@ -44,12 +46,10 @@ export class EventosComponent implements OnInit {
   public getEvents(): void {
     this.eventService.getEvents().subscribe({
       next: (events: Event[]) => {
-        console.log(events);
         this.events = events;
-        this.filteredEvents = events;
+        this.filteredEvents = this.events;
       },
       error: (error: any) => {
-        console.log(error);
         this.spinner.hide();
         this.toastr.error('Não foi possível carregar os eventos', 'Erro!');
       },
@@ -74,13 +74,28 @@ export class EventosComponent implements OnInit {
   }
 
   // MODAL
-  openModal(template: TemplateRef<any>): void {
+  openModal(event: any, template: TemplateRef<any>, id: number, theme: string): void {
+    event.stopPropagation();
+    this.eventId = id;
+    this.eventTheme = theme;
     this.modalRef = this.modalService.show(template, { class: 'modal-sm' });
   }
 
   confirm(): void {
     this.modalRef.hide();
-    this.toastr.success('O evento foi excluído com sucesso!', 'Excluído');
+    this.spinner.show();
+    this.eventService.deleteEvent(this.eventId).subscribe({
+      next: (result: string) => {
+        this.toastr.success('O evento foi excluído com sucesso!', 'Excluído');
+        this.getEvents();
+      },
+      error: (error: any) => {
+        this.spinner.hide();
+        this.toastr.error('Não foi possível excluir o evento!', 'Operação falhou');
+        console.error(error);
+      },
+      complete: () => { }
+    }).add(() => { this.spinner.hide(); });
   }
 
   decline(): void {

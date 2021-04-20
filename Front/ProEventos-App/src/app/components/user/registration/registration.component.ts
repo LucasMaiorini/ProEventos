@@ -34,4 +34,9 @@ export class RegistrationComponent implements OnInit {
   public resetForm(): void {
     this.form.reset();
   }
+
+  //Returns the Class to set invalid status to Bootstrap if is there any validation error.
+  public cssValidator(field: string): any {
+    return { 'is-invalid': this.form.get(field)?.errors && this.form.get(field)?.touched };
+  }
 }

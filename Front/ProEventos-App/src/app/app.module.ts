@@ -12,6 +12,11 @@ import { BsDropdownModule } from 'ngx-bootstrap/dropdown';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
+import { BsDatepickerModule } from 'ngx-bootstrap/datepicker'
+//DATEPICKER
+import { defineLocale } from 'ngx-bootstrap/chronos'
+import { ptBrLocale } from 'ngx-bootstrap/locale'
+defineLocale('pt-br', ptBrLocale);
 
 // Components
 import { AppComponent } from './app.component';
@@ -63,6 +68,7 @@ import { RegistrationComponent } from './components/user/registration/registrati
       progressAnimation: 'decreasing',
     }),
     NgxSpinnerModule,
+    BsDatepickerModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],
