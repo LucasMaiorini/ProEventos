@@ -38,8 +38,10 @@ namespace ProEventos.API
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
             
             services.AddScoped<IEventService, EventService>();
+            services.AddScoped<IBatchService, BatchService>();
             services.AddScoped<IGeneralPersistence, GeneralPersistence>();
             services.AddScoped<IEventPersistence, EventPersistence>();
+            services.AddScoped<IBatchPersistence, BatchPersistence>();
 
             services.AddCors();
             services.AddControllers();

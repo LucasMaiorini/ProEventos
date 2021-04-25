@@ -2,7 +2,7 @@ import { AbstractControl, FormGroup } from '@angular/forms';
 
 export class ValidatorField {
   static MustMatch(controlName: string, matchingControlName: string): any {
-    return (group: AbstractControl) => {
+    return (group: AbstractControl): any => {
       const formGroup = group as FormGroup;
       const control = formGroup.controls[controlName];
       const matchingControl = formGroup.controls[matchingControlName];

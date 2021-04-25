@@ -13,6 +13,10 @@ import { ModalModule } from 'ngx-bootstrap/modal';
 import { ToastrModule } from 'ngx-toastr';
 import { NgxSpinnerModule } from 'ngx-spinner';
 import { BsDatepickerModule } from 'ngx-bootstrap/datepicker'
+import { NgxCurrencyModule } from 'ngx-currency'
+import { IConfig, NgxMaskModule } from 'ngx-mask'
+export const options: Partial<IConfig> | (() => Partial<IConfig>) = null;
+
 //DATEPICKER
 import { defineLocale } from 'ngx-bootstrap/chronos'
 import { ptBrLocale } from 'ngx-bootstrap/locale'
@@ -69,6 +73,8 @@ import { RegistrationComponent } from './components/user/registration/registrati
     }),
     NgxSpinnerModule,
     BsDatepickerModule.forRoot(),
+    NgxCurrencyModule,
+    NgxMaskModule.forRoot(),
   ],
   providers: [],
   bootstrap: [AppComponent],
